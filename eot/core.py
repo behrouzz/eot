@@ -11,7 +11,7 @@ def tim2ord(t):
     return d
 
 
-def ord2tim(d, y=2022):
+def ord2tim(d, y):
     t = datetime(y, 1, 1) + timedelta(days=d)
     return t
 
@@ -41,8 +41,11 @@ def get_eot(t, file=None, interp_kind='cubic'):
             print()
             
     df = pd.read_csv(file)
-    x = np.linspace(-0.5, 365.5, 367)
-    y = df[str(t.year)].values
+    #y = df[str(t.year)].dropna().values
+    #x = np.linspace(-0.5, 365.5, len(y))
+    y = df[str(t.year)].dropna().values
+    x = np.linspace(-0.5, len(y)-1.5, len(y))
+    
     f = interpolate.interp1d(x, y, kind=interp_kind)
     equ_of_time = f(tim2ord(t)).flatten()[0]/60
     return equ_of_time

@@ -7,13 +7,13 @@
 
 ## Quick start
 
-Download [this CSV file](https://raw.githubusercontent.com/behrouzz/astrodata/main/eot/eot_2020_2050.csv) which is the table of equation of time for all days at 12:00:00 from 2020 to 2050.
+Download [this CSV file](https://raw.githubusercontent.com/behrouzz/eot/main/eot_2020_2050.csv) which is the table of equation of time for all days at 12:00:00 from 2020 to 2050.
 You can use it as you want, fit curve, interpolation, etc.
 
 
-## Module *eot.py*
+## Package *eot*
 
-The module *eot* contains several functions that you can use easily to calculate equation of time.
+The package *eot* contains several functions that you can use easily to calculate equation of time.
 Let's find *mean solar time* and *true solar time* for the city of Tehran with longitude of 51.3347.
 
 ```python

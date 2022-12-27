@@ -27,10 +27,20 @@ def gmt_noon_exact(t):
     return noon.datetime()
 
 
+def create_time_window(year):
+    t_ini = datetime(year, 1, 1, 12) - timedelta(days=1)
+    t_fin = datetime(year, 12, 31, 12) + timedelta(days=1)
+    dt = t_fin - t_ini
+    n_days = dt.days + 1
+    tw = np.array([t_ini + timedelta(days=i) for i in range(n_days)])
+    return tw
+
+
 def eot_table_year(year):
-    t0 = datetime(year, 1, 1, 12) - timedelta(days=1)
-    tw = np.array([t0 + timedelta(days=i) for i in range(367)])
+    tw = create_time_window(year)
     y = np.array([(t-gmt_noon_exact(t)).total_seconds() for t in tw])
+    if len(y)<368:
+        y = np.insert(y, 60, np.nan) #60: 29 feb
     return y
 
 
@@ -38,18 +48,18 @@ def eot_table(y1, y2):
     dc = {}
     for i in range(y1, y2+1):
         dc[str(i)] = eot_table_year(i)
-
+    
     df = pd.DataFrame(dc)
 
-    t0 = datetime(y1, 1, 1, 12) - timedelta(days=1)
-    tw = np.array([t0 + timedelta(days=i) for i in range(367)])
+    tw = create_time_window(2024) # 2024: with 29 feb
     
     df.index = [str(i)[5:-3] for i in tw]
     df.index.name = 'time'
+
     return df
 
 
 
 if __name__ == "__main__":
     df = eot_table(2020, 2050)
-    df.to_csv('eot_2020_2050.csv')
+    df.to_csv('../eot_2020_2050.csv')
