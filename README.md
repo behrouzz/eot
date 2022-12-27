@@ -8,17 +8,17 @@
 ## Quick start
 
 Download [this CSV file](https://raw.githubusercontent.com/behrouzz/eot/main/eot_2020_2050.csv) which is the table of equation of time for all days at 12:00:00 from 2020 to 2050.
-You can use it as you want, fit curve, interpolation, etc.
+You can use it as you want, fit curve, interpolation, etc. You can also use the functions I have provided. All of these funtions have been embedded in the module *time* of [hypatie](https://pypi.org/project/hypatie/) python package.
 
 
-## Package *eot*
+## Package *hypatie.time*
 
-The package *eot* contains several functions that you can use easily to calculate equation of time with *very high precision*.
+The package *hypatie.time* (here under the name *eot.py*) contains several functions that you can use easily to calculate equation of time with *very high precision*.
 Let's find *mean solar time* and *true solar time* for the city of Tehran with longitude of 51.3347.
 
 ```python
 from datetime import datetime, timedelta
-from eot import get_eot
+from hypatie.time import get_eot
 
 t = datetime.utcnow()
 lon = 51.3347
@@ -54,7 +54,7 @@ True solar time : 2022-12-27 07:44:42.045190
 The most straight forward way of getting solar times is using the function *solar_time*:
 
 ```python
-from eot import solar_time
+from hypatie.time import solar_time
 from datetime import datetime
 
 t = datetime.utcnow()
@@ -71,7 +71,7 @@ You can use the equation ot time to calculate the noon for a given longtitude. B
 
 ```python
 from datetime import datetime
-from eot import get_noon
+from hypatie.time import get_noon
 
 t = datetime.utcnow()
 lon = 51.3347
@@ -92,7 +92,7 @@ If you want to calculate the equation of time for a time interval, the fast way 
 
 ```python
 from datetime import datetime, timedelta
-from eot import eot_time_window
+from hypatie.time import eot_time_window
 
 t0 = datetime(2023, 12, 15)
 time_window = [t0 + timedelta(days=i) for i in range(50)]
