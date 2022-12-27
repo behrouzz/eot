@@ -31,7 +31,7 @@ print('-------')
 mean_solar_time = t + timedelta(hours=(lon/15))
 print('Mean solar time :', mean_solar_time)
     
-equ_of_time = get_eot(mean_solar_time)
+equ_of_time = get_eot(t)
 print('Equation of time (min) :', equ_of_time)
 
 equ_of_time = timedelta(minutes=equ_of_time)
@@ -42,19 +42,19 @@ print('True solar time :', true_solar_time)
 Here's the results:
 
 ```
-UTC time now    : 2022-12-27 01:51:27.663060
+UTC time now    : 2022-12-27 04:18:30.351416
 --------------------------------------------
 Tehran:
 -------
-Mean solar time : 2022-12-27 05:16:47.991060
-Equation of time (min) : -0.8760704257819109
-True solar time : 2022-12-27 05:17:40.555286
+Mean solar time : 2022-12-27 07:43:50.679416
+Equation of time (min) : -0.8560962378834734
+True solar time : 2022-12-27 07:44:42.045190
 ```
 
 
 ## Time of the noon
 
-You can use the equation ot time to calculate the noon for a given longtitude. But for ease of use, I have created the function *get_noon* in the *eot* module which gives the noon for a given longtitude in UTC.
+You can use the equation ot time to calculate the noon for a given longtitude. But for ease of use, I have created the function *get_noon* which gives the noon for a given longtitude in UTC.
 
 
 ```python
