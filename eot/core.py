@@ -28,6 +28,21 @@ def download_eot_file(path=None):
     return path+tbl_file
 
 
+def eot_func(year=None, tbl_file=None, interp_kind='cubic'):
+    if year is None:
+        year = datetime.utcnow().year
+    if tbl_file is None:
+        tbl_file = 'eot_2020_2050.csv'
+        if not os.path.isfile(tbl_file):
+            tbl_file = download_eot_file()
+            
+    df = pd.read_csv(tbl_file)
+    y = df[str(year)].dropna().values
+    x = np.linspace(-0.5, len(y)-1.5, len(y))
+    f = interpolate.interp1d(x, y, kind=interp_kind)
+    return f
+
+
 def get_eot(t, tbl_file=None, interp_kind='cubic'):
     """
     Equation of time for a given moment
@@ -46,18 +61,39 @@ def get_eot(t, tbl_file=None, interp_kind='cubic'):
     Note: the csv file containing daily values of EoT from 2020 to 2050:
     https://raw.githubusercontent.com/behrouzz/eot/main/eot_2020_2050.csv
     """
-    if tbl_file is None:
-        tbl_file = 'eot_2020_2050.csv'
-        if not os.path.isfile(tbl_file):
-            tbl_file = download_eot_file()
-            
-    df = pd.read_csv(tbl_file)
-    y = df[str(t.year)].dropna().values
-    x = np.linspace(-0.5, len(y)-1.5, len(y))
-    
-    f = interpolate.interp1d(x, y, kind=interp_kind)
+    f = eot_func(year=t.year, tbl_file=tbl_file, interp_kind=interp_kind)
     equ_of_time = f(tim2ord(t)).flatten()[0]/60
     return equ_of_time
+
+
+def eot_time_window(time_window, tbl_file=None, interp_kind='cubic'):
+    """
+    Equation of time for a given time window (interval)
+    
+    Arguments
+    ---------
+        time_window (array of datetimes) : list or numpy array of times (UTC)
+        tbl_file (str)   : path to csv file (table of daily values of EoT)
+                           (Default is None, i.e. file will be downloaded)
+        interp_kind (str): interpolation kind (linear, quadratic, cubic, etc.)
+
+    Returns
+    -------
+        eot_arr (array of floats): equation of time in minutes for all moments
+
+    Note: the csv file containing daily values of EoT from 2020 to 2050:
+    https://raw.githubusercontent.com/behrouzz/eot/main/eot_2020_2050.csv
+    """
+    time_window = pd.Series(time_window)
+    years = time_window.dt.year.unique()
+    eot_arr = []
+    for yr in years:
+        tw = time_window[time_window.dt.year==yr]
+        ords = np.array([tim2ord(i) for i in tw])
+        f = eot_func(yr, tbl_file, interp_kind)
+        eot_arr = eot_arr + list(f(ords)/60)
+    eot_arr = np.array(eot_arr)
+    return eot_arr
 
 
 def solar_time(t, lon, tbl_file=None):
